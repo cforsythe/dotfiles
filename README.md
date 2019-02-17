@@ -1,9 +1,8 @@
-# vimrc
-Easily accessible vimrc file with all needed features
+# Dot Files
 
-# TABSTOP = 4
-# SHIFTWIDTH = 4
-# EXPANDTAB
-# FILETYPE PLUGIN INDENT ON
 
-Great source for settings https://stackoverflow.com/questions/234564/tab-key-4-spaces-and-auto-indent-after-curly-braces-in-vim
+## <a name=".vimrc"></a> .vimrc
+
+For more info on the .vimrc I am using and what the settings are doing take a look at this [post](https://dougblack.io/words/a-good-vimrc.html)
+
+Great source for vim settings https://dougblack.io/words/a-good-vimrc.html 
