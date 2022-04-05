@@ -1,4 +1,4 @@
-colorscheme badwolf  " https://github.com/sjl/badwolf.git
+colorscheme badwolf  " https://github.com/sjl/badwolf.git clone repo then run mv badwolf/color/*.vim ~/.vim/colors
 syntax enable
 let mapleader = ","
 set tabstop=4
