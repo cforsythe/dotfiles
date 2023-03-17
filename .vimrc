@@ -34,3 +34,4 @@ let skip_defaults_vim=1
 if has("syntax")
   syntax on
 endif
+autocmd FileType yaml,json setlocal ts=2 sts=2 sw=2 expandtab
