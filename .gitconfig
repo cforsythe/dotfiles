@@ -1,0 +1,6 @@
+[core]
+	excludesfile = /nail/home/forsythe/.gitignore
+[pull]
+	rebase = false
+[mergetool]
+	keepBackup = false
