@@ -1,4 +1,4 @@
-colorscheme badwolf  " https://github.com/sjl/badwolf.git clone repo then run mv badwolf/colors/*.vim ~/.vim/colors
+colorscheme badwolf  " https://github.com/sjl/badwolf.git
 syntax enable
 let mapleader = ","
 set tabstop=4
@@ -7,23 +7,24 @@ set shiftwidth=4
 set expandtab
 set number
 set cursorline
-filetype indent on
+filetype plugin indent on
 set wildmenu
 set lazyredraw
 set showmatch
 set incsearch
 set hlsearch
+set textwidth=100
 nnoremap <leader><space> :nohlsearch<CR>
 nnoremap j gj
 nnoremap k gk
 
 " Configuration file for vim
-set modelines=0		" CVE-2007-2438
+set modelines=0     " CVE-2007-2438
 
 " Normally we use vim-extensions. If you want true vi-compatibility
 " remove change the following statements
-set nocompatible	" Use Vim defaults instead of 100% vi compatibility
-set backspace=2		" more powerful backspacing
+set nocompatible    " Use Vim defaults instead of 100% vi compatibility
+set backspace=2     " more powerful backspacing
 
 " Don't write backup file if vim is being called by "crontab -e"
 au BufWrite /private/tmp/crontab.* set nowritebackup nobackup
@@ -34,4 +35,17 @@ let skip_defaults_vim=1
 if has("syntax")
   syntax on
 endif
+
+
+function! Osc52Yank()
+  let buffer=system('base64 -w0', @0)
+  let buffer=substitute(buffer, "\n$", "", "")
+  let buffer='\e]52;c;'.buffer.'\x07'
+  if $TMUX != ''
+    let buffer='\ePtmux;\e'.buffer.'\e\\'
+  endif
+  silent exe "!echo -ne ".shellescape(buffer)." > ".shellescape("/dev/tty")
+endfunction
+command! Osc52CopyYank call Osc52Yank()
+nnoremap <leader>y :Osc52CopyYank<cr>
 autocmd FileType yaml,json setlocal ts=2 sts=2 sw=2 expandtab
