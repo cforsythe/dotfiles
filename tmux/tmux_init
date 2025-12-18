@@ -1,0 +1,30 @@
+echo "Running .tmux_init script"
+TMUX_CONF_PATH="$HOME/.tmux.conf"
+
+if ! command -v agenttmux >/dev/null 2>&1; then
+    echo "agenttmux not found"
+    exit 1
+fi
+
+echo "agenttmux found"
+
+# Check if the tmux session 'mysession' already exists
+if tmux has-session -t mysession 2>/dev/null; then
+    echo "Attaching to existing tmux session 'mysession'"
+else
+    echo "No existing tmux session found, creating a new one"
+
+    if agenttmux new-session -d -s mysession; then
+        echo "New tmux session 'mysession' created successfully with aggressive-resize off"
+    else
+        echo "Failed to create new tmux session 'mysession'"
+        exit 1
+    fi
+fi
+
+# Attach to the tmux session
+if agenttmux -CC attach -t mysession; then
+    echo "Successfully attached to tmux session 'mysession'"
+else
+    echo "Failed to attach to tmux session 'mysession'"
+fi
