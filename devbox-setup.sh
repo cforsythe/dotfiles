@@ -52,75 +52,108 @@ if [ -f /etc/os-release ]; then
     OS=$NAME
     VER=$VERSION_ID
 else
-    print_error "Cannot detect OS"
-    exit 1
+    print_warning "Cannot detect OS"
+    OS="Unknown"
 fi
 
 print_info "Detected OS: $OS $VER"
 
-# Set package manager based on OS
-if [[ "$OS" == *"Ubuntu"* ]] || [[ "$OS" == *"Debian"* ]]; then
-    PKG_MANAGER="apt"
-    PKG_UPDATE="sudo apt update"
-    PKG_INSTALL="sudo apt install -y"
-elif [[ "$OS" == *"CentOS"* ]] || [[ "$OS" == *"Red Hat"* ]] || [[ "$OS" == *"Amazon Linux"* ]]; then
-    PKG_MANAGER="yum"
-    PKG_UPDATE="sudo yum update -y"
-    PKG_INSTALL="sudo yum install -y"
-elif [[ "$OS" == *"Fedora"* ]]; then
-    PKG_MANAGER="dnf"
-    PKG_UPDATE="sudo dnf update -y"
-    PKG_INSTALL="sudo dnf install -y"
-else
-    print_error "Unsupported OS: $OS"
-    exit 1
+# Check if we can/should use package managers
+SKIP_PACKAGES=false
+
+# Check if user wants to skip package installation
+read -p "Install system packages? (y/n): " INSTALL_PACKAGES
+if [ "$INSTALL_PACKAGES" != "y" ]; then
+    SKIP_PACKAGES=true
+    print_warning "Skipping package installation"
+    echo "  Make sure these are already installed: zsh, git, curl, wget, tmux, vim, neovim"
 fi
 
-# Update package lists
-print_info "Updating package lists..."
-$PKG_UPDATE
-print_success "Package lists updated"
-
-# Install essential packages
-print_info "Installing essential packages..."
-
-PACKAGES=(
-    "zsh"
-    "git"
-    "curl"
-    "wget"
-    "tmux"
-    "vim"
-    "python3"
-    "python3-pip"
-    "jq"
-    "htop"
-    "tree"
-)
-
-# Add OS-specific packages
-if [[ "$PKG_MANAGER" == "apt" ]]; then
-    PACKAGES+=("build-essential" "ripgrep" "fd-find")
-elif [[ "$PKG_MANAGER" == "yum" ]] || [[ "$PKG_MANAGER" == "dnf" ]]; then
-    PACKAGES+=("gcc" "gcc-c++" "make" "kernel-devel")
-fi
-
-for pkg in "${PACKAGES[@]}"; do
-    if [ -n "$pkg" ]; then
-        print_info "Installing $pkg..."
-        $PKG_INSTALL "$pkg" 2>/dev/null || print_warning "Failed to install $pkg (may already be installed)"
+if [ "$SKIP_PACKAGES" = false ]; then
+    # Set package manager based on OS
+    if [[ "$OS" == *"Ubuntu"* ]] || [[ "$OS" == *"Debian"* ]]; then
+        PKG_MANAGER="apt"
+        PKG_UPDATE="sudo apt update"
+        PKG_INSTALL="sudo apt install -y"
+    elif [[ "$OS" == *"CentOS"* ]] || [[ "$OS" == *"Red Hat"* ]] || [[ "$OS" == *"Amazon Linux"* ]]; then
+        PKG_MANAGER="yum"
+        PKG_UPDATE="sudo yum update -y"
+        PKG_INSTALL="sudo yum install -y"
+    elif [[ "$OS" == *"Fedora"* ]]; then
+        PKG_MANAGER="dnf"
+        PKG_UPDATE="sudo dnf update -y"
+        PKG_INSTALL="sudo dnf install -y"
+    else
+        print_warning "Unsupported OS for automatic package installation: $OS"
+        print_info "Skipping package installation. Please install required packages manually."
+        SKIP_PACKAGES=true
     fi
-done
+fi
 
-print_success "Essential packages installed"
+if [ "$SKIP_PACKAGES" = false ]; then
+    # Update package lists
+    print_info "Updating package lists..."
+    if $PKG_UPDATE 2>/dev/null; then
+        print_success "Package lists updated"
+    else
+        print_warning "Could not update package lists (may not have permission)"
+        print_info "Skipping package installation"
+        SKIP_PACKAGES=true
+    fi
+fi
+
+if [ "$SKIP_PACKAGES" = false ]; then
+    # Install essential packages
+    print_info "Installing essential packages..."
+
+    PACKAGES=(
+        "zsh"
+        "git"
+        "curl"
+        "wget"
+        "tmux"
+        "vim"
+        "python3"
+        "python3-pip"
+        "jq"
+        "htop"
+        "tree"
+    )
+
+    # Add OS-specific packages
+    if [[ "$PKG_MANAGER" == "apt" ]]; then
+        PACKAGES+=("build-essential" "ripgrep" "fd-find")
+    elif [[ "$PKG_MANAGER" == "yum" ]] || [[ "$PKG_MANAGER" == "dnf" ]]; then
+        PACKAGES+=("gcc" "gcc-c++" "make" "kernel-devel")
+    fi
+
+    for pkg in "${PACKAGES[@]}"; do
+        if [ -n "$pkg" ]; then
+            print_info "Installing $pkg..."
+            $PKG_INSTALL "$pkg" 2>/dev/null || print_warning "Failed to install $pkg (may already be installed)"
+        fi
+    done
+
+    print_success "Essential packages installed"
+else
+    print_info "Skipped package installation - continuing with setup..."
+fi
 
 # Install Neovim
-print_info "Installing Neovim..."
-if command -v nvim &> /dev/null; then
-    print_warning "Neovim already installed"
+if [ "$SKIP_PACKAGES" = false ]; then
+    print_info "Installing Neovim..."
+    if command -v nvim &> /dev/null; then
+        print_warning "Neovim already installed"
+    else
+        $PKG_INSTALL neovim 2>/dev/null || print_warning "Could not install neovim via package manager"
+        print_success "Neovim installed"
+    fi
 else
-    $PKG_INSTALL neovim 2>/dev/null || print_warning "Could not install neovim via package manager"
-    print_success "Neovim installed"
+    if command -v nvim &> /dev/null; then
+        print_success "Neovim is already installed"
+    else
+        print_warning "Neovim not found - please install manually"
+    fi
 fi
 
 # Install vim-plug for Neovim
