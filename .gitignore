@@ -1,0 +1,19 @@
+# Vim swap files
+*.swp
+*.swo
+*~
+.netrwhist
+
+# OS files
+.DS_Store
+
+# Sensitive configs
+git/gitconfig.local
+
+# Claude session data (not needed in dotfiles)
+config/claude/history.jsonl
+config/claude/debug/
+config/claude/todos/
+config/claude/file-history/
+config/claude/projects/
+config/claude/shell-snapshots/

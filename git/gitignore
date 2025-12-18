@@ -1,0 +1,4 @@
+*.sw[op]
+coverage.xml
+.vscode
+tmp.*

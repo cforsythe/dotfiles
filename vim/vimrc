@@ -49,3 +49,4 @@ endfunction
 command! Osc52CopyYank call Osc52Yank()
 nnoremap <leader>y :Osc52CopyYank<cr>
 autocmd FileType yaml,json setlocal ts=2 sts=2 sw=2 expandtab
+

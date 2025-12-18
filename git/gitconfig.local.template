@@ -1,0 +1,13 @@
+# .gitconfig.local - Company/machine-specific git configuration
+# This file is not tracked in git
+
+# Company-specific safe directories
+# [safe]
+#     directory = /path/to/company/repo
+
+# User info (if different per machine)
+# [user]
+#     name = Your Name
+#     email = your.email@company.com
+
+# Company-specific settings

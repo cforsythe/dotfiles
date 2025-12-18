@@ -1,0 +1,5 @@
+# .zshrc.local - Company/machine-specific configuration
+# This file is not tracked in git (add to .gitignore)
+
+# Company-specific setup
+# Example: source /etc/profile.d/company-custom.zsh

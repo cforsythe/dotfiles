@@ -1,0 +1,13 @@
+[core]
+	excludesfile = ~/.gitignore
+[pull]
+	rebase = false
+[mergetool]
+	keepBackup = false
+[init]
+	defaultBranch = main
+
+# For company-specific git config, create a .gitconfig.local file
+# and include it here:
+# [include]
+#     path = ~/.gitconfig.local
