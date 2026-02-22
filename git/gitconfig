@@ -11,3 +11,6 @@
 # and include it here:
 # [include]
 #     path = ~/.gitconfig.local
+[user]
+	name = cforsythe
+	email = cforsythe.cs@gmail.com

@@ -17,3 +17,14 @@ config/claude/todos/
 config/claude/file-history/
 config/claude/projects/
 config/claude/shell-snapshots/
+
+# Claude sensitive/runtime files
+config/claude/.credentials.json
+config/claude/backups/
+config/claude/cache/
+
+# Per-repo Claude local settings
+.claude/
+
+# Plugin marketplaces (managed separately)
+config/claude/plugins/marketplaces/
