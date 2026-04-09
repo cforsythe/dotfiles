@@ -300,6 +300,21 @@ else
     echo "  3. Then run: ~/dotfiles/install.sh"
 fi
 
+# On non-Yelp machines, seed .gitconfig.local with personal identity if not present
+if [ "$YELP_MACHINE" = false ] && [ ! -f "$HOME/.gitconfig.local" ]; then
+    TEMPLATE=""
+    if [ -f "$DOTFILES_DIR/git/gitconfig.local.template" ]; then
+        TEMPLATE="$DOTFILES_DIR/git/gitconfig.local.template"
+    elif [ -f "$HOME/dotfiles/git/gitconfig.local.template" ]; then
+        TEMPLATE="$HOME/dotfiles/git/gitconfig.local.template"
+    fi
+
+    if [ -n "$TEMPLATE" ]; then
+        cp "$TEMPLATE" "$HOME/.gitconfig.local"
+        print_success "Created ~/.gitconfig.local with personal git identity"
+    fi
+fi
+
 # Change default shell to Zsh
 print_info "Checking default shell..."
 if [ "$SHELL" != "$(which zsh)" ]; then
