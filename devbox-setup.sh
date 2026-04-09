@@ -235,13 +235,8 @@ print_info "Installing Claude Code CLI..."
 if command -v claude &> /dev/null; then
     print_warning "Claude Code CLI already installed"
 else
-    # Make sure npm is available
-    if command -v npm &> /dev/null; then
-        npm install -g @anthropic-ai/claude-code
-        print_success "Claude Code CLI installed"
-    else
-        print_warning "npm not found, skipping Claude Code CLI installation"
-    fi
+    curl -fsSL https://claude.ai/install.sh | bash
+    print_success "Claude Code CLI installed"
 fi
 
 # Install tmux plugin manager (TPM)
