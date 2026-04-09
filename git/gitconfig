@@ -7,7 +7,5 @@
 [init]
 	defaultBranch = main
 
-# For company-specific git config, create a .gitconfig.local file
-# and include it here:
-# [include]
-#     path = ~/.gitconfig.local
+[include]
+	path = ~/.gitconfig.local

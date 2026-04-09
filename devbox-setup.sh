@@ -58,6 +58,13 @@ fi
 
 print_info "Detected OS: $OS $VER"
 
+# Detect Yelp devbox (homedirs/Puppet manages dotfile symlinks on these machines)
+YELP_MACHINE=false
+if [ -d "/nail/home" ]; then
+    YELP_MACHINE=true
+    print_info "Yelp devbox detected — dotfile symlinks will be skipped (managed by homedirs)"
+fi
+
 # Check if we can/should use package managers
 SKIP_PACKAGES=false
 
@@ -260,7 +267,9 @@ if [ -n "$DOTFILES_REPO" ]; then
         DOTFILES_DIR="${DOTFILES_REPO#local:}"
         print_info "Using local dotfiles from: $DOTFILES_DIR"
 
-        if [ -f "$DOTFILES_DIR/install.sh" ]; then
+        if [ "$YELP_MACHINE" = true ]; then
+            print_info "Skipping install.sh — homedirs manages dotfiles on Yelp machines"
+        elif [ -f "$DOTFILES_DIR/install.sh" ]; then
             cd "$DOTFILES_DIR"
             ./install.sh
             print_success "Dotfiles installed"
@@ -277,8 +286,10 @@ if [ -n "$DOTFILES_REPO" ]; then
             print_success "Dotfiles cloned"
         fi
 
-        print_info "Installing dotfiles..."
-        if [ -f "$HOME/dotfiles/install.sh" ]; then
+        if [ "$YELP_MACHINE" = true ]; then
+            print_info "Skipping install.sh — homedirs manages dotfiles on Yelp machines"
+        elif [ -f "$HOME/dotfiles/install.sh" ]; then
+            print_info "Installing dotfiles..."
             cd "$HOME/dotfiles"
             ./install.sh
             print_success "Dotfiles installed"
