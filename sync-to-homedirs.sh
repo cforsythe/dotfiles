@@ -68,6 +68,12 @@ copy_file "$DOTFILES_DIR/nvim/nvim/init.vim"                 "$TARGET/.config/nv
 copy_file "$DOTFILES_DIR/nvim/nvim/lua/config.lua"           "$TARGET/.config/nvim/lua/config.lua"
 copy_file "$DOTFILES_DIR/nvim/nvim/colors/badwolf.vim"       "$TARGET/.config/nvim/colors/badwolf.vim"
 
+# Claude config — sourced from live ~/.claude/ (more up to date than dotfiles)
+copy_file "$HOME/.claude/CLAUDE.md"                          "$TARGET/.claude/CLAUDE.md"
+copy_file "$HOME/.claude/settings.json"                      "$TARGET/.claude/settings.json"
+copy_file "$HOME/.claude/plugins/config.json"                "$TARGET/.claude/plugins/config.json"
+copy_file "$HOME/.claude/plugins/known_marketplaces.json"    "$TARGET/.claude/plugins/known_marketplaces.json"
+
 # Create .gitconfig.local with Yelp identity if not already present
 if [ ! -f "$TARGET/.gitconfig.local" ]; then
     cat > "$TARGET/.gitconfig.local" <<EOF
