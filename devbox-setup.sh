@@ -317,7 +317,7 @@ fi
 
 # Change default shell to Zsh
 print_info "Checking default shell..."
-if [ "$SHELL" != "$(which zsh)" ]; then
+if [ "$(basename "$SHELL")" != "zsh" ]; then
     print_info "Changing default shell to Zsh..."
     chsh -s "$(which zsh)"
     print_success "Default shell changed to Zsh (will take effect on next login)"
